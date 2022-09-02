@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+
+<div class="container-fluid mt-3">
+
+  <div class="row">
+<!-- SIDEBAR Filters -->
+     <div class="col-lg-3 mx-auto">
+        <div class="list-group">
+          <a href="/" class="list-group-item list-group-item-action ">All Products</a>
+          {% for cat in category %}
+          <a href="/?category_id={{cat.id}}" class="list-group-item list-group-item-action ">{{cat}}</a>
+          {% endfor %}
+        </div>
+     </div>
+
+    <div id="products" class="col-lg-9 mx-auto">
+      <div class="row mx-auto">
+        {% for product in products%}
+        <div class="card mx-auto mb-3" id="{{product.id}}" style="width: 18rem;">
+          <img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{product.name}}</h5>
+            <p class="card-text">₹{{product.price}}</p>
+          </div>
+          <div class="card-footer p-0  no-gutters">
+
+            {% if product|is_in_cart:request.session.cart %}
+            <div class="row mx-auto" >
+              <input type="submit" value=" - " class="col-2 btn btn-block btn-success">
+              <div class="text-center col"> {{ product|cart_count:request.session.cart }}</div>
+
+              <!-- PLUS BUTTON LOGIC -->
+              <form action="/" method="post" class="f">
+                {% csrf_token %}
+                <input type="text" hidden name="product" value="{{product.id}}">
+                <input type="submit" value=" + " class=" btn btn-block btn-success bt" >
+              </form>
+              
+             </div>
+            {% else %}
+            <form action="/#{{product.id}}" method="post" class="btn-block">
+              {% csrf_token %}
+              <input type="text" hidden name="product" value="{{product.id}}"> 
+                <input type="submit" value="Add to Cart" class="btn btn-sm btn-lighter form-control">
+            </form>
+            {% endif %}
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

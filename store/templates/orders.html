@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load cart %}
+{% load customfilter %}
+
+<div class="container">
+    <p class="display-4 text-center">Your Orders</p>
+   <div class="border rounded p-2 m-2">
+    {{product}}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Sr.no</th>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Date</th>
+                <th>Price(INR)</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td scope="row">{{forloop.counter}}</td>
+                <td>
+                    <img style="width:80px;" src="{{order.product.image.url}}" alt="dfd">
+                </td>
+                <td>{{order.product.name}}</td>
+                <td>{{order.date}}</td>
+                <td>₹{{order.price}}</td>
+                <td>{{order.quantity}}</td>
+                <td>{{order.quantity|multiply:order.price}}</td>
+                {% if order.status %}
+                <td><small class="badge badge-success ">Completed</small></td>
+                {% else %}
+                <td><small class="badge badge-warning ">Pending</small></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <!-- MODAL -->
+
+    
+   </div>
+</div>
+{% endblock %}
